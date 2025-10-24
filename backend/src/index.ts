@@ -1,5 +1,5 @@
 /**
- * LaunchPad AI - Main Entry Point
+ * SOLTokenForger - Main Entry Point
  *
  * Autonomous token launch platform powered by AI agents
  * Solana Cypherpunk Hackathon 2025
@@ -28,7 +28,7 @@ dotenv.config();
 
 async function bootstrap() {
   try {
-    logger.info('🚀 Starting LaunchPad AI Backend...');
+    logger.info('🚀 Starting SOLTokenForger Backend...');
 
     // Initialize Express app
     const app = express();
@@ -87,7 +87,7 @@ async function bootstrap() {
     // Start server
     const PORT = config.port;
     httpServer.listen(PORT, () => {
-      logger.info(`✅ LaunchPad AI Backend running on port ${PORT}`);
+      logger.info(`✅ SOLTokenForger Backend running on port ${PORT}`);
       logger.info(`📱 Environment: ${config.nodeEnv}`);
       logger.info(`🌐 Solana Network: ${config.solana.network}`);
       logger.info(`🔗 RPC: ${config.solana.rpcUrl}`);

@@ -1,4 +1,4 @@
-// Prisma Schema for LaunchPad AI
+// Prisma Schema for SOLTokenForger
 // PostgreSQL database models
 
 generator client {

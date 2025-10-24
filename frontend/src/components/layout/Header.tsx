@@ -26,7 +26,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="text-2xl">🚀</div>
             <span className="text-xl font-bold gradient-text">
-              LaunchPad AI
+              SOLTokenForger
             </span>
           </Link>
 

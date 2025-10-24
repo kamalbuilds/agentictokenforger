@@ -331,7 +331,7 @@ def calculate_capital_efficiency(position: DAMMPosition) -> float:
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("💧 LaunchPad AI - Liquidity Optimizer Agent")
+    print("💧 SOLTokenForger - Liquidity Optimizer Agent")
     print("=" * 60)
     print(f"Agent Address: {liquidity_optimizer.address}")
     print(f"Agent Name: {liquidity_optimizer.name}")

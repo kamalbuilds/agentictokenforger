@@ -30,7 +30,7 @@ export default function HomePage() {
         >
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             Welcome to{' '}
-            <span className="gradient-text">LaunchPad AI</span>
+            <span className="gradient-text">SOLTokenForger</span>
           </h1>
           <p className="text-xl text-dark-400 max-w-3xl mx-auto">
             Launch tokens in minutes with AI-powered optimization.

@@ -1,4 +1,4 @@
-;;; LaunchPad AI - MeTTa Knowledge Graph
+;;; SOLTokenForger - MeTTa Knowledge Graph
 ;;; DeFi Protocol Ontology and Launch Pattern Database
 ;;;
 ;;; This knowledge graph stores:

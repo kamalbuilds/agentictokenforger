@@ -1,7 +1,7 @@
 {
   "name": "@launchpad-ai/frontend",
   "version": "1.0.0",
-  "description": "LaunchPad AI Frontend - Next.js 14 Responsive Web App",
+  "description": "SOLTokenForger Frontend - Next.js 14 Responsive Web App",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

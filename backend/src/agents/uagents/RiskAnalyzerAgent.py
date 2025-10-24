@@ -473,7 +473,7 @@ risk_analyzer.include(chat_proto, publish_manifest=True)
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🔍 LaunchPad AI - Risk Analyzer Agent")
+    print("🔍 SOLTokenForger - Risk Analyzer Agent")
     print("=" * 60)
     print(f"Agent Address: {risk_analyzer.address}")
     print(f"Agent Name: {risk_analyzer.name}")

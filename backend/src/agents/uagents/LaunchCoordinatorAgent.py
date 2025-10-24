@@ -352,7 +352,7 @@ launch_coordinator.include(chat_proto, publish_manifest=True)
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("🚀 LaunchPad AI - Launch Coordinator Agent")
+    print("🚀 SOLTokenForger - Launch Coordinator Agent")
     print("=" * 60)
     print(f"Agent Address: {launch_coordinator.address}")
     print(f"Agent Name: {launch_coordinator.name}")

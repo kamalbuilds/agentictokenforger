@@ -1,7 +1,7 @@
 {
   "name": "@launchpad-ai/backend",
   "version": "1.0.0",
-  "description": "LaunchPad AI Backend - AI agent orchestration and API",
+  "description": "SOLTokenForger Backend - AI agent orchestration and API",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",

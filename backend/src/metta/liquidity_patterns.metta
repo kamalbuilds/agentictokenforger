@@ -1,4 +1,4 @@
-;;; LaunchPad AI - Liquidity Optimization Patterns
+;;; SOLTokenForger - Liquidity Optimization Patterns
 ;;; MeTTa Knowledge Graph for DAMM v2 Position Management
 ;;;
 ;;; This knowledge graph stores:
