@@ -10,7 +10,6 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
-  BackpackWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -26,7 +25,6 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new BackpackWalletAdapter(),
     ],
     []
   );
