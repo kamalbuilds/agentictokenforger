@@ -3,7 +3,11 @@
  * Centralized application configuration
  */
 
+import dotenv from 'dotenv';
 import { z } from 'zod';
+
+// Load environment variables
+dotenv.config();
 
 const envSchema = z.object({
   // Server

@@ -10,7 +10,8 @@ Responsibilities:
 - Historical pattern learning from fraud cases
 """
 
-from uagents import Agent, Context, Protocol
+from uagents import Agent, Context, Protocol, Model
+from typing import Optional, Dict, Any
 from uagents.setup import fund_agent_if_low
 from uagents_core.contrib.protocols.chat import (
     ChatMessage,
@@ -47,7 +48,14 @@ if os.path.exists(KNOWLEDGE_BASE_PATH):
     print(f"✅ MeTTa knowledge base loaded: {KNOWLEDGE_BASE_PATH}")
 
 # Initialize chat protocol
-chat_proto = Protocol(spec=chat_protocol_spec)
+chat_proto = Protocol(name="chat_protocol", version="1.0")
+
+# Message models
+class RiskMessage(Model):
+    action: str
+    token_address: Optional[str] = None
+    launch_data: Optional[Dict[str, Any]] = None
+    data: Optional[Dict[str, Any]] = None
 
 # Agent state
 agent_state = {
@@ -405,19 +413,19 @@ async def monitor_active_tokens(ctx: Context):
                 await send_rug_pull_alert(token_address, rug_pull_analysis)
 
 
-@risk_analyzer.on_message(model=dict)
-async def handle_messages(ctx: Context, sender: str, msg: dict):
+@risk_analyzer.on_message(model=RiskMessage)
+async def handle_messages(ctx: Context, sender: str, msg: RiskMessage):
     """
     Handle messages from other agents
     """
-    action = msg.get("action")
+    action = msg.action
 
     if action == "monitor_token":
         # Add token to monitoring list
-        token_address = msg.get("token_address")
+        token_address = msg.token_address
         agent_state["monitored_tokens"][token_address] = {
             "added_at": datetime.utcnow().isoformat(),
-            "launch_data": msg.get("launch_data", {}),
+            "launch_data": msg.launch_data or {},
         }
         ctx.logger.info(f"✅ Added token {token_address} to monitoring")
 

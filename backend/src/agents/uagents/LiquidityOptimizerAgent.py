@@ -10,11 +10,12 @@ Responsibilities:
 - Update MeTTa knowledge graph with liquidity patterns
 """
 
-from uagents import Agent, Context, Protocol
+from uagents import Agent, Context, Protocol, Model
 from uagents.setup import fund_agent_if_low
 from hyperon import MeTTa
 from datetime import datetime, timedelta
 from decimal import Decimal
+from typing import Optional, Dict, Any
 import asyncio
 import json
 
@@ -48,6 +49,16 @@ agent_state = {
     },
     "solana_execution_agent": "agent1qw5jy8gp8r9x2n3k4m5l6v7w8x9y0z1a2b3c4d5e6f7g8h9",
 }
+
+# Define message models
+class AgentMessage(Model):
+    action: str
+    position_id: Optional[str] = None
+    pool_address: Optional[str] = None
+    token_a: Optional[str] = None
+    token_b: Optional[str] = None
+    amount: Optional[float] = None
+    data: Optional[Dict[str, Any]] = None
 
 
 class DAMMPosition:
@@ -254,20 +265,20 @@ async def monitor_positions(ctx: Context):
         agent_state["monitored_positions"][position_id]["last_check"] = datetime.utcnow().isoformat()
 
 
-@liquidity_optimizer.on_message(model=dict)
-async def handle_messages(ctx: Context, sender: str, msg: dict):
+@liquidity_optimizer.on_message(model=AgentMessage)
+async def handle_messages(ctx: Context, sender: str, msg: AgentMessage):
     """
     Handle messages from other agents or users
     """
-    action = msg.get("action")
+    action = msg.action
 
     if action == "add_position":
         # Add new position to monitoring
-        position_id = msg.get("position_id")
+        position_id = msg.position_id
         agent_state["monitored_positions"][position_id] = {
-            "pool_address": msg.get("pool_address"),
-            "token_a": msg.get("token_a"),
-            "token_b": msg.get("token_b"),
+            "pool_address": msg.pool_address,
+            "token_a": msg.token_a,
+            "token_b": msg.token_b,
             "added_at": datetime.utcnow().isoformat(),
             "last_check": None,
         }

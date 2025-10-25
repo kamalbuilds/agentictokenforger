@@ -3,13 +3,13 @@
  * Manages all uAgents and execution bridges
  */
 
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import { logger } from '../utils/logger';
 import { SolanaExecutionBridge } from './bridge/SolanaExecutionBridge';
 
 let executionBridge: SolanaExecutionBridge;
-const agentProcesses: Map<string, any> = new Map();
+const agentProcesses: Map<string, ChildProcess> = new Map();
 
 export async function initializeAgents(): Promise<void> {
   try {
@@ -47,7 +47,7 @@ async function startUAgents(): Promise<void> {
       logger.info(`🤖 Starting ${agent.name} agent...`);
 
       const agentPath = path.join(agentsDir, agent.file);
-      const process = spawn('python3', [agentPath], {
+      const agentProcess = spawn('python3', [agentPath], {
         cwd: agentsDir,
         env: {
           ...process.env,
@@ -55,20 +55,20 @@ async function startUAgents(): Promise<void> {
         },
       });
 
-      process.stdout.on('data', (data) => {
+      agentProcess.stdout?.on('data', (data: Buffer) => {
         logger.info(`[${agent.name}] ${data.toString().trim()}`);
       });
 
-      process.stderr.on('data', (data) => {
+      agentProcess.stderr?.on('data', (data: Buffer) => {
         logger.error(`[${agent.name}] ${data.toString().trim()}`);
       });
 
-      process.on('close', (code) => {
+      agentProcess.on('close', (code: number | null) => {
         logger.warn(`[${agent.name}] Process exited with code ${code}`);
         agentProcesses.delete(agent.name);
       });
 
-      agentProcesses.set(agent.name, process);
+      agentProcesses.set(agent.name, agentProcess);
       logger.info(`✅ ${agent.name} agent started`);
 
       // Wait a bit between starting agents
@@ -87,9 +87,9 @@ export function getExecutionBridge(): SolanaExecutionBridge {
 export async function shutdownAgents(): Promise<void> {
   logger.info('Shutting down agents...');
 
-  for (const [name, process] of agentProcesses) {
+  for (const [name, agentProcess] of agentProcesses) {
     logger.info(`Stopping ${name} agent...`);
-    process.kill();
+    agentProcess.kill();
   }
 
   agentProcesses.clear();

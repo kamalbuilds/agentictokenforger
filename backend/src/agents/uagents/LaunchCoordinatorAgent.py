@@ -10,7 +10,8 @@ Responsibilities:
 - Cross-chain bridge to Solana execution layer
 """
 
-from uagents import Agent, Context, Protocol
+from uagents import Agent, Context, Protocol, Model
+from typing import Optional, Dict, Any
 from uagents.setup import fund_agent_if_low
 from uagents_core.contrib.protocols.chat import (
     ChatMessage,
@@ -49,7 +50,16 @@ else:
     print(f"⚠️  MeTTa knowledge base not found: {KNOWLEDGE_BASE_PATH}")
 
 # Initialize chat protocol for ASI:One integration
-chat_proto = Protocol(spec=chat_protocol_spec)
+chat_proto = Protocol(name="chat_protocol", version="1.0")
+
+# Message models
+class SolanaExecutionResult(Model):
+    action: str
+    token_mint: Optional[str] = None
+    name: Optional[str] = None
+    graduation_threshold: Optional[float] = None
+    error: Optional[str] = None
+    data: Optional[Dict[str, Any]] = None
 
 # Agent state
 agent_state = {
@@ -321,29 +331,29 @@ Provide token contract address for analysis.
     await ctx.send(sender, response)
 
 
-@launch_coordinator.on_message(model=dict)
-async def handle_solana_execution_result(ctx: Context, sender: str, msg: dict):
+@launch_coordinator.on_message(model=SolanaExecutionResult)
+async def handle_solana_execution_result(ctx: Context, sender: str, msg: SolanaExecutionResult):
     """
     Receive execution results from Solana Execution Agent
     """
     ctx.logger.info(f"📬 Received execution result from Solana agent")
 
-    if msg.get("action") == "launch_complete":
-        ctx.logger.info(f"✅ Token launch completed: {msg.get('token_mint')}")
+    if msg.action == "launch_complete":
+        ctx.logger.info(f"✅ Token launch completed: {msg.token_mint}")
 
         # Update MeTTa knowledge graph with new successful launch
         launch_data = f"""
-        (launch-data "{msg.get('token_mint')}"
+        (launch-data "{msg.token_mint}"
           (metrics
-            (name "{msg.get('name')}")
-            (graduation-threshold {msg.get('graduation_threshold')})
+            (name "{msg.name}")
+            (graduation-threshold {msg.graduation_threshold})
             (success True)
             (timestamp "{datetime.utcnow().isoformat()}")))
         """
         metta.run(launch_data)
 
-    elif msg.get("action") == "launch_failed":
-        ctx.logger.error(f"❌ Token launch failed: {msg.get('error')}")
+    elif msg.action == "launch_failed":
+        ctx.logger.error(f"❌ Token launch failed: {msg.error}")
 
 
 # Include chat protocol for ASI:One integration

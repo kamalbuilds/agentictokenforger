@@ -5,13 +5,16 @@
  * Solana Cypherpunk Hackathon 2025
  */
 
+// Load environment variables FIRST
+import dotenv from 'dotenv';
+dotenv.config();
+
 import 'express-async-errors';
 import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 
 import { logger } from './utils/logger';
 import { config } from './config';
@@ -22,9 +25,6 @@ import { setupRoutes } from './api/routes';
 import { setupWebSocket } from './websocket';
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
-
-// Load environment variables
-dotenv.config();
 
 async function bootstrap() {
   try {

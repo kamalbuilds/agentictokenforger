@@ -3,7 +3,7 @@
  * BullMQ for agent task processing
  */
 
-import { Queue, Worker, QueueScheduler } from 'bullmq';
+import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
 import { config } from '../config';
 import { logger } from '../utils/logger';
