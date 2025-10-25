@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
 import { Wallet, TrendingUp, TrendingDown, DollarSign, Clock, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import Header from '@/components/layout/Header';
 
 interface TokenHolding {
   id: string;
@@ -142,26 +143,33 @@ export default function PortfolioPage() {
 
   if (!connected) {
     return (
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center"
-          >
-            <Wallet className="w-20 h-20 text-primary-500 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-white mb-4">Connect Your Wallet</h2>
-            <p className="text-gray-400 text-lg mb-8 max-w-md">
-              Connect your Solana wallet to view your portfolio and track your token holdings
-            </p>
-          </motion.div>
-        </div>
-      </main>
+      <div className="min-h-screen bg-dark-900">
+        <Header />
+
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center"
+            >
+              <Wallet className="w-20 h-20 text-primary-500 mx-auto mb-6" />
+              <h2 className="text-3xl font-bold text-white mb-4">Connect Your Wallet</h2>
+              <p className="text-gray-400 text-lg mb-8 max-w-md">
+                Connect your Solana wallet to view your portfolio and track your token holdings
+              </p>
+            </motion.div>
+          </div>
+        </main>
+      </div>
     );
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-dark-900">
+      <Header />
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -348,6 +356,7 @@ export default function PortfolioPage() {
           </motion.div>
         </>
       )}
-    </main>
+      </main>
+    </div>
   );
 }

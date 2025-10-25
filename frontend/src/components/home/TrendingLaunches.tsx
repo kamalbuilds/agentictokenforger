@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Users, DollarSign } from 'lucide-react';
 
 export default function TrendingLaunches() {
+  
   const launches = [
     {
       name: 'DogeCoin 2.0',

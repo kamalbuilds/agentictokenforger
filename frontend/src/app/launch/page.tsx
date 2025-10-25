@@ -38,7 +38,7 @@ export default function LaunchPage() {
 
     try {
       // API call to backend
-      const response = await fetch('http://localhost:3000/api/launch/create', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/launch/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
