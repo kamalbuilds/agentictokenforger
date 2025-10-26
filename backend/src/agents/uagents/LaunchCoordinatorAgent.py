@@ -278,13 +278,15 @@ Reply 'approve' to proceed with this strategy, or 'custom' to adjust parameters.
     response = create_text_chat(strategy_message)
     await ctx.send(sender, response)
 
-    # Store pending launch
-    agent_state["active_launches"][str(msg.msg_id)] = {
+    # Store pending launch with generated UUID
+    launch_id = str(uuid4())
+    agent_state["active_launches"][launch_id] = {
         "token_params": token_params,
         "strategy": optimal_strategy,
         "risk_analysis": risk_analysis,
         "status": "awaiting_approval",
         "timestamp": datetime.utcnow().isoformat(),
+        "sender": sender,
     }
 
 

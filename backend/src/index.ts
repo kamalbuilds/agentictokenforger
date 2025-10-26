@@ -69,6 +69,11 @@ async function bootstrap() {
     logger.info('🔴 Connecting to Redis...');
     await initializeRedis();
 
+    // Initialize Queue Workers
+    logger.info('⚙️  Starting queue workers...');
+    const { startWorkers } = await import('./queue/workers');
+    await startWorkers(io);
+
     // Initialize AI Agents
     logger.info('🤖 Initializing AI Agents...');
     await initializeAgents();
@@ -107,6 +112,10 @@ async function bootstrap() {
       httpServer.close(() => {
         logger.info('HTTP server closed');
       });
+
+      // Stop workers
+      const { stopWorkers } = await import('./queue/workers');
+      await stopWorkers();
 
       // Close connections
       await connectDatabase.close();

@@ -1,6 +1,3 @@
-// Prisma Schema for SOLTokenForger
-// PostgreSQL database models
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,181 +7,126 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model TokenLaunch {
-  id                    String   @id @default(uuid())
-  tokenMint             String   @unique
-  name                  String
-  symbol                String
-  decimals              Int      @default(9)
-  totalSupply           BigInt
-  category              String   // meme, utility, governance
-  targetMarketCap       BigInt
-
-  // Presale configuration
-  presaleMode           String?  // FCFS, PRO_RATA
-  depositLimit          BigInt?
-  graduationThreshold   BigInt?
-
-  // Bonding curve configuration
-  curveType             String?  // LINEAR, EXPONENTIAL, LOGARITHMIC
-  initialPrice          Float?
-
-  // Status
-  status                String   @default("pending") // pending, active, graduated, failed
-  launchedAt            DateTime @default(now())
-  graduatedAt           DateTime?
-
-  // Metrics
-  currentMarketCap      BigInt   @default(0)
-  volume24h             BigInt   @default(0)
-  holderCount           Int      @default(0)
-
-  // Risk assessment
-  riskScore             Float    @default(5.0)
-  riskLevel             String   @default("MEDIUM")
-
-  // Relationships
-  liquidityPositions    LiquidityPosition[]
-  riskAlerts            RiskAlert[]
-  transactions          Transaction[]
-
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+model AgentActivity {
+  id              String   @id @default(uuid())
+  agentName       String
+  activity        String
+  description     String
+  data            Json
+  success         Boolean
+  error           String?
+  executionTimeMs Int
+  confidenceScore Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model LiquidityPosition {
-  id                    String   @id @default(uuid())
-  positionNft           String   @unique
-  poolAddress           String
-  tokenLaunchId         String
-  tokenLaunch           TokenLaunch @relation(fields: [tokenLaunchId], references: [id])
-
-  // Position configuration
-  lowerPrice            Float
-  upperPrice            Float
-  liquidityAmount       BigInt
-
-  // Status
-  status                String   @default("active") // active, closed, rebalancing
-
-  // Performance metrics
-  feesEarned            BigInt   @default(0)
-  apr                   Float    @default(0)
-  capitalEfficiency     Float    @default(0)
-  impermanentLoss       Float    @default(0)
-
-  // Rebalancing history
-  lastRebalanceAt       DateTime?
-  rebalanceCount        Int      @default(0)
-
-  // AI optimization
-  aiManaged             Boolean  @default(true)
-  optimizationScore     Float    @default(0)
-
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-}
-
-model RiskAlert {
-  id                    String   @id @default(uuid())
-  tokenLaunchId         String
-  tokenLaunch           TokenLaunch @relation(fields: [tokenLaunchId], references: [id])
-
-  // Alert details
-  alertType             String   // rug_pull, high_risk, suspicious_activity
-  severity              String   // low, medium, high, critical
-  message               String
-
-  // Risk indicators
-  indicators            Json
-  confidence            Float
-
-  // Status
-  acknowledged          Boolean  @default(false)
-  resolvedAt            DateTime?
-
-  createdAt             DateTime @default(now())
-}
-
-model Transaction {
-  id                    String   @id @default(uuid())
-  signature             String   @unique
-  tokenLaunchId         String
-  tokenLaunch           TokenLaunch @relation(fields: [tokenLaunchId], references: [id])
-
-  // Transaction details
-  type                  String   // deploy, buy, sell, add_liquidity, remove_liquidity
-  amount                BigInt
-  price                 Float
-
-  // Wallet information
-  walletAddress         String
-
-  // Status
-  status                String   @default("pending") // pending, confirmed, failed
-  confirmedAt           DateTime?
-
-  createdAt             DateTime @default(now())
-}
-
-model User {
-  id                    String   @id @default(uuid())
-  walletAddress         String   @unique
-
-  // Profile
-  username              String?
-  email                 String?
-
-  // Stats
-  launchesCreated       Int      @default(0)
-  totalVolume           BigInt   @default(0)
-  successfulLaunches    Int      @default(0)
-
-  // Preferences
-  riskTolerance         String   @default("medium") // low, medium, high
-  autoInvest            Boolean  @default(false)
-  notificationsEnabled  Boolean  @default(true)
-
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-}
-
-model AgentActivity {
-  id                    String   @id @default(uuid())
-  agentName             String   // LaunchCoordinator, LiquidityOptimizer, RiskAnalyzer
-  activity              String   // decision, execution, alert, analysis
-
-  // Activity details
-  description           String
-  data                  Json
-
-  // Outcome
-  success               Boolean
-  error                 String?
-
-  // Performance
-  executionTimeMs       Int
-  confidenceScore       Float?
-
-  createdAt             DateTime @default(now())
+  id                String      @id @default(uuid())
+  positionNft       String      @unique
+  poolAddress       String
+  tokenLaunchId     String
+  lowerPrice        Float
+  upperPrice        Float
+  liquidityAmount   BigInt
+  status            String      @default("active")
+  feesEarned        BigInt      @default(0)
+  apr               Float       @default(0)
+  capitalEfficiency Float       @default(0)
+  impermanentLoss   Float       @default(0)
+  lastRebalanceAt   DateTime?
+  rebalanceCount    Int         @default(0)
+  aiManaged         Boolean     @default(true)
+  optimizationScore Float       @default(0)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  TokenLaunch       TokenLaunch @relation(fields: [tokenLaunchId], references: [id])
 }
 
 model MLPrediction {
-  id                    String   @id @default(uuid())
-  modelName             String   // bonding_curve, risk_scoring
-  modelVersion          String
+  id            String    @id @default(uuid())
+  modelName     String
+  modelVersion  String
+  input         Json
+  prediction    Json
+  confidence    Float
+  accuracy      Float?
+  actualOutcome Json?
+  validatedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
 
-  // Input/Output
-  input                 Json
-  prediction            Json
+model RiskAlert {
+  id            String      @id @default(uuid())
+  tokenLaunchId String
+  alertType     String
+  severity      String
+  message       String
+  indicators    Json
+  confidence    Float
+  acknowledged  Boolean     @default(false)
+  resolvedAt    DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  TokenLaunch   TokenLaunch @relation(fields: [tokenLaunchId], references: [id])
+}
 
-  // Metrics
-  confidence            Float
-  accuracy              Float?
+model TokenLaunch {
+  id                  String              @id @default(uuid())
+  tokenMint           String              @unique
+  name                String
+  symbol              String
+  decimals            Int                 @default(9)
+  totalSupply         BigInt
+  category            String
+  targetMarketCap     BigInt
+  presaleMode         String?
+  depositLimit        BigInt?
+  graduationThreshold BigInt?
+  curveType           String?
+  initialPrice        Float?
+  status              String              @default("pending")
+  launchedAt          DateTime            @default(now())
+  graduatedAt         DateTime?
+  currentMarketCap    BigInt              @default(0)
+  volume24h           BigInt              @default(0)
+  holderCount         Int                 @default(0)
+  riskScore           Float               @default(5.0)
+  riskLevel           String              @default("MEDIUM")
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  LiquidityPosition   LiquidityPosition[]
+  RiskAlert           RiskAlert[]
+  Transaction         Transaction[]
+}
 
-  // Validation
-  actualOutcome         Json?
-  validatedAt           DateTime?
+model Transaction {
+  id            String      @id @default(uuid())
+  signature     String      @unique
+  tokenLaunchId String
+  type          String
+  amount        BigInt
+  price         Float
+  walletAddress String
+  status        String      @default("pending")
+  confirmedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  TokenLaunch   TokenLaunch @relation(fields: [tokenLaunchId], references: [id])
+}
 
-  createdAt             DateTime @default(now())
+model User {
+  id                   String   @id @default(uuid())
+  walletAddress        String   @unique
+  username             String?
+  email                String?
+  launchesCreated      Int      @default(0)
+  totalVolume          BigInt   @default(0)
+  successfulLaunches   Int      @default(0)
+  riskTolerance        String   @default("medium")
+  autoInvest           Boolean  @default(false)
+  notificationsEnabled Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }

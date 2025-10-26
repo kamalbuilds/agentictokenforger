@@ -16,8 +16,8 @@ const envSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
 
   // Database
-  DATABASE_URL: z.string(),
-  REDIS_URL: z.string(),
+  DATABASE_URL: z.string().optional(),
+  REDIS_URL: z.string().optional(),
 
   // Solana
   SOLANA_RPC_URL: z.string(),
@@ -27,7 +27,7 @@ const envSchema = z.object({
 
   // Meteora
   METEORA_API_URL: z.string().default('https://api.meteora.ag'),
-  METEORA_PROGRAM_ID: z.string(),
+  METEORA_PROGRAM_ID: z.string().default('LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo'),
 
   // AI & ML
   OPENAI_API_KEY: z.string().optional(),

@@ -604,7 +604,7 @@ export function setupRoutes(app: Express): void {
       }
 
       // Calculate risk indicators
-      const totalLiquidity = token.liquidityPositions.reduce((sum, pos) => sum + pos.liquidityAmount, BigInt(0));
+      const totalLiquidity = token.liquidityPositions.reduce((sum, pos) => sum + pos.liquidityAmount, 0n);
       const liquidityConcentration = token.liquidityPositions.length > 0
         ? Number(token.liquidityPositions[0].liquidityAmount) / Number(totalLiquidity)
         : 0;
@@ -734,55 +734,16 @@ export function setupRoutes(app: Express): void {
 
       logger.info(`Received launch request for: ${name}`);
 
-      // Generate default configurations based on category
-      const presaleModeMap: Record<string, 'FCFS' | 'PRO_RATA'> = {
-        meme: 'FCFS',
-        utility: 'PRO_RATA',
-        governance: 'PRO_RATA',
-      };
-
-      const curveTypeMap: Record<string, 'LINEAR' | 'EXPONENTIAL' | 'LOGARITHMIC'> = {
-        meme: 'EXPONENTIAL',
-        utility: 'LINEAR',
-        governance: 'LOGARITHMIC',
-      };
-
-      const targetMarketCapNum = parseFloat(targetMarketCap) || 100000;
-      const totalSupplyNum = parseFloat(totalSupply) || 1000000;
-
-      // Add to queue for processing with complete configuration
+      // Add to queue for processing
       const queue = getLaunchQueue();
       const job = await queue.add('create-token', {
         tokenParams: {
           name,
           symbol,
-          decimals: 9,
           totalSupply,
           category,
           targetMarketCap,
         },
-        presaleConfig: {
-          mode: presaleModeMap[category] || 'FCFS',
-          depositLimit: targetMarketCapNum * 0.1, // 10% of target market cap
-          vestingCliffDuration: 86400, // 1 day in seconds
-          vestingDuration: 2592000, // 30 days in seconds
-          immediateRelease: 50, // 50% immediate release
-          startTime: Math.floor(Date.now() / 1000), // Current time
-          endTime: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60), // 7 days from now
-        },
-        curveConfig: {
-          type: curveTypeMap[category] || 'LINEAR',
-          initialPrice: targetMarketCapNum / totalSupplyNum / 10, // Start at 10% of target price
-          graduationThreshold: targetMarketCapNum * 0.5, // Graduate at 50% of target
-          tradingFeeRate: 100, // 1% trading fee (in basis points)
-          creatorFeeRate: 50,  // 0.5% creator fee
-          partnerFeeRate: 50,  // 0.5% partner fee
-        },
-        feeSchedule: [
-          { duration: 300, feeRate: category === 'meme' ? 5 : 3 },  // First 5 minutes: higher fees
-          { duration: 900, feeRate: category === 'meme' ? 2 : 1.5 }, // Next 15 minutes
-          { duration: 3600, feeRate: 1 }, // After 1 hour: standard fee
-        ],
       });
 
       res.json({

@@ -16,7 +16,7 @@ let riskQueue: Queue;
 export async function initializeRedis(): Promise<void> {
   try {
     // Create Redis connection
-    redisClient = new Redis(config.redis.url, {
+    redisClient = new Redis(config.redis.url || 'redis://localhost:6379', {
       maxRetriesPerRequest: null,
       enableReadyCheck: false,
     });
@@ -32,20 +32,57 @@ export async function initializeRedis(): Promise<void> {
     // Initialize BullMQ queues
     launchQueue = new Queue('token-launches', {
       connection: redisClient,
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+        removeOnComplete: {
+          count: 100, // Keep last 100 completed jobs
+        },
+        removeOnFail: {
+          count: 500, // Keep last 500 failed jobs for debugging
+        },
+      },
     });
 
     liquidityQueue = new Queue('liquidity-management', {
       connection: redisClient,
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+        removeOnComplete: {
+          count: 100,
+        },
+        removeOnFail: {
+          count: 500,
+        },
+      },
     });
 
     riskQueue = new Queue('risk-analysis', {
       connection: redisClient,
+      defaultJobOptions: {
+        attempts: 2,
+        backoff: {
+          type: 'exponential',
+          delay: 500,
+        },
+        removeOnComplete: {
+          count: 200,
+        },
+        removeOnFail: {
+          count: 300,
+        },
+      },
     });
 
     logger.info('✅ BullMQ queues initialized');
-
-    // Initialize workers
-    initializeWorkers();
+    logger.info('   Note: Workers are started separately via startWorkers()');
 
   } catch (error) {
     logger.error('❌ Failed to initialize Redis:', error);
@@ -53,61 +90,8 @@ export async function initializeRedis(): Promise<void> {
   }
 }
 
-function initializeWorkers() {
-  // Launch Queue Worker
-  new Worker('token-launches', async (job) => {
-    logger.info(`Processing launch job: ${job.id}`);
-
-    // Job would be processed by LaunchCoordinatorAgent
-    const { tokenParams, strategy } = job.data;
-
-    // Execute launch
-    logger.info(`Launching token: ${tokenParams.name}`);
-
-    return {
-      success: true,
-      tokenMint: 'MOCK_TOKEN_MINT',
-    };
-  }, {
-    connection: redisClient,
-  });
-
-  // Liquidity Queue Worker
-  new Worker('liquidity-management', async (job) => {
-    logger.info(`Processing liquidity job: ${job.id}`);
-
-    // Job would be processed by LiquidityOptimizerAgent
-    const { action, positionId } = job.data;
-
-    logger.info(`Executing ${action} for position: ${positionId}`);
-
-    return {
-      success: true,
-      action,
-    };
-  }, {
-    connection: redisClient,
-  });
-
-  // Risk Queue Worker
-  new Worker('risk-analysis', async (job) => {
-    logger.info(`Processing risk analysis job: ${job.id}`);
-
-    // Job would be processed by RiskAnalyzerAgent
-    const { tokenAddress } = job.data;
-
-    logger.info(`Analyzing risk for token: ${tokenAddress}`);
-
-    return {
-      success: true,
-      riskScore: 7.5,
-    };
-  }, {
-    connection: redisClient,
-  });
-
-  logger.info('✅ Queue workers initialized');
-}
+// Workers are now initialized separately in src/queue/workers/index.ts
+// This allows for better separation of concerns and graceful shutdown handling
 
 export function getRedisClient(): Redis {
   return redisClient;

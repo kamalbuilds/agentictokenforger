@@ -22,7 +22,7 @@ export async function initializeAgents(): Promise<void> {
     if (process.env.ENABLE_AI_AGENTS === 'true') {
       await startUAgents();
     } else {
-      logger.info('⚠️  AI Agents disabled (ENABLE_AI_AGENTS=false)');
+      logger.info('⚠️  AI Agents disabled (ENABLE_AI_AGENTS=true)');
     }
 
     logger.info('✅ All agents initialized successfully');
