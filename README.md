@@ -1,4 +1,4 @@
-# 🚀 SOLTokenForger - Autonomous AI-Powered Token Launch Platform
+# 🚀 AgenticTokenForger - Autonomous AI-Powered Token Launch Platform
 
 **The World's First Platform Combining Fetch.ai uAgents + Meteora October 2025 Release**
 
@@ -9,9 +9,9 @@
 
 ---
 
-## 🎯 What is SOLTokenForger?
+## 🎯 What is AgenticTokenForger?
 
-SOLTokenForger is a **production-ready autonomous token launch and liquidity management platform** that revolutionizes how tokens are launched on Solana. 
+AgenticTokenForger is a **production-ready autonomous token launch and liquidity management platform** that revolutionizes how tokens are launched on Solana. 
 
 ### The Innovation
 
@@ -31,7 +31,7 @@ We're the **first and only platform** to combine:
 - ❌ High failure rate (60%+ failed launches)
 - ❌ Vulnerable to sniper bots and rug pulls
 
-**SOLTokenForger:**
+**AgenticTokenForger:**
 - ✅ **5 minutes** AI-powered launch
 - ✅ **Zero DeFi expertise** needed
 - ✅ **Autonomous 24/7** liquidity optimization
@@ -68,7 +68,7 @@ We're the **first and only platform** to combine:
 │  │  • Solana Agent Kit v2 integration               │  │
 │  │  • MeteoraService for DLMM operations            │  │
 │  └──────────────────────────────────────────────────┘  │
-│                                                         │
+│                                                        │
 │  ┌──────────────────────────────────────────────────┐  │
 │  │  MeteoraService (Complete Integration)           │  │
 │  │  • createPresaleVault() - FCFS/PRO_RATA modes    │  │
@@ -105,7 +105,7 @@ We're the **first and only platform** to combine:
 │  │  • 92% rug pull detection accuracy               │  │
 │  │  PORT: 8003                                      │  │
 │  └──────────────────────────────────────────────────┘  │
-│                                                         │
+│                                                        │
 │  ┌──────────────────────────────────────────────────┐  │
 │  │  MeTTa Knowledge Graph (defi_knowledge.metta)    │  │
 │  │  • 50+ successful Solana launch patterns         │  │
@@ -113,7 +113,7 @@ We're the **first and only platform** to combine:
 │  │  • Symbolic reasoning rules                      │  │
 │  │  • Continuous learning from outcomes             │  │
 │  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────┘
                    │ On-chain Transactions
 ┌──────────────────▼─────────────────────────────────────┐
 │              SOLANA BLOCKCHAIN                         │
@@ -127,7 +127,7 @@ We're the **first and only platform** to combine:
 │  │  ✅ Alpha Vault (Anti-Sniper)                    │  │
 │  │  ✅ Fee Scheduler (Time-decay)                   │  │
 │  │  ✅ Rate Limiter (Size-based fees)               │  │
-│  └──────────────────────────────────────────────────┘  │
+│  └───────────────────────────────────────────────--─┘  │
 │                                                        │
 │  ┌──────────────────────────────────────────────────┐  │
 │  │  SPL Token Program + DLMM Program                │  │
